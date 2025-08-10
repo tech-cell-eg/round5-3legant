@@ -36,9 +36,9 @@ class AuthController extends Controller {
     }
     public function login(LoginRequest $request) {
         try {
-            $credentials = $request->only('login', 'password');
-            $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-            if (!Auth::attempt([$loginType => $credentials['login'], 'password' => $credentials['password']])) {
+            $credentials = $request->only('username', 'password');
+            $loginType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+            if (!Auth::attempt([$loginType => $credentials['username'], 'password' => $credentials['password']])) {
                 return $this->errorResponse([], 'Incorrect email/username or password', 401);
             }
             $user = Auth::user();
