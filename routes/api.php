@@ -12,7 +12,11 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-
+Route::post('forget-password', [AuthController::class, 'sendPasswordResetMessage']);
+Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.reset');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+});
 
 Route::post('/email/verification-notification', function (Request $request) {
     if ($request->user()->hasVerifiedEmail()) {
@@ -26,4 +30,3 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     $request->fulfill();
     return response()->json(['message' => 'Email verified successfully']);
 })->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
-

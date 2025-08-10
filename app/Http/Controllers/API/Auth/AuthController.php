@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Support\Facades\Password;
+use PhpParser\Node\Expr\Throw_;
 
 class AuthController extends Controller {
 
@@ -55,7 +57,42 @@ class AuthController extends Controller {
     public function logout(Request $request) {
         try {
             $request->user()->tokens()->delete();
-            return $this->successResponse([], 'You have successfully logged out.', 200);
+            return $this->successResponse([], 'You have successfully logged out', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Error', 500);
+        }
+    }
+
+    //Reset password funcitons
+    public function sendPasswordResetMessage(Request $request) {
+        try {
+            $request->validate([
+                'email' => 'required|email'
+            ]);
+            $status = Password::sendResetLink($request->only('email'));
+            return $status === Password::RESET_LINK_SENT ? $this->successResponse([], 'Reset link sent to your email', 200)
+                : $this->errorResponse([], 'Unable to send reset link', 500);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Error', 500);
+        }
+    }
+
+    public function resetPassword(Request $request) {
+        try {
+            $request->validate([
+                'token'    => 'required',
+                'email'    => 'required|email',
+                'password' => 'required|min:8|confirmed',
+            ]);
+            $status = Password::reset(
+                $request->only('email', 'password', 'password_confirmation', 'token'),
+                function ($user, $password) {
+                    $user->password = Hash::make($password);
+                    $user->save();
+                }
+            );
+            return $status === Password::PASSWORD_RESET ? $this->successResponse([], 'Password reset successful', 200)
+                : $this->errorResponse([], 'Unable to reset password', 500);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
