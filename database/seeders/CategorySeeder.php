@@ -14,11 +14,11 @@ class categorySeeder extends Seeder
     {
          Category::create([
             'name'   => 'tables',
-            'parent_id'=> '1',
+            'parent_id'=> null,
         ]);
          Category::create([
             'name'   => 'doors',
-            'parent_id'=> '2',
+            'parent_id'=> null,
         ]);
     }
 }
