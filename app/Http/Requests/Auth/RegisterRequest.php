@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests\Auth;
 
+
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class RegisterRequest extends FormRequest {
     /**
@@ -23,5 +26,29 @@ class RegisterRequest extends FormRequest {
             'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:8',
         ];
+    }
+
+    public function messages(): array {
+        return [
+            'username.required' => 'Username is required',
+            'username.min' => 'Username min is 5 characters',
+            'username.max' => 'username max is 25 characters',
+            'username.unique' => 'Username is already used',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email must be valid',
+            'email.unique' => 'Email is already used',
+            'password.required' => 'Password is required',
+            'password.min' => 'Password must be at least 8 characters',
+            'password.confirmed' => 'Password confirmation does not match',
+        ];
+    }
+    protected function failedValidation(Validator $validator) {
+        throw new HttpResponseException(
+            response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors'  => $validator->errors()
+            ], 422)
+        );
     }
 }
