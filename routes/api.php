@@ -35,3 +35,4 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 
 Route::get("/products",[ProductController::class,'getProducts']);
+Route::get("/sorted-products",[ProductController::class,'sortedProducts']);

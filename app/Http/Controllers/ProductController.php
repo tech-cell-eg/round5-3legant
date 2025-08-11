@@ -8,7 +8,8 @@ use App\Models\Product;
 class ProductController extends Controller
 {
     use APIResponseTrait;
-    // category_id    priceRange from to   sorted [desc or asc] 
+    // category_id    priceRange from to   
+    //دي الحجات اللي الفرونت ممكن يبعتها
     public function getProducts(Request $request){
         $query=Product::join("categories","products.category_id","=","categories.id")->select("categories.*","products.*");
         
@@ -20,16 +21,42 @@ class ProductController extends Controller
             $query->where("products.base_price",">=",$request->from);
             $query->where("products.base_price","<=",$request->to);
         }
-
-       if ($request->filled('sorted')) {
-            $direction = strtolower($request->sorted) === 'desc' ? 'desc' : 'asc';
-            $query->orderBy('products.base_price', $direction);
-        }
-
-        
-
         $products = $query->cursorPaginate(30);
 
         return $this->successResponse($products,"products fetched successfully",200);
     }
+
+
+    //sorted=price or latest  order=[desc or asc] 
+    //دي الحجات اللي الفرونت ممكن يبعتها
+   public function sortedProducts(Request $request)
+    {
+        $query = Product::join("categories", "products.category_id", "=", "categories.id")
+            ->select("categories.*", "products.*");
+
+        if ($request->filled("sorted") && $request->filled("order")) {
+            $allowedSorts = ['base_price', 'created_at'];
+            $allowedDirections = ['asc', 'desc'];
+
+            $sortedBy = in_array(strtolower($request->sorted), $allowedSorts) 
+                ? strtolower($request->sorted) 
+                : 'base_price';
+
+            $direction = in_array(strtolower($request->order), $allowedDirections) 
+                ? strtolower($request->order) 
+                : 'asc';
+
+            $query->orderBy("products.".$sortedBy, $direction);
+        }
+        else{
+            return $this->errorResponse("bad parameters were passed");
+        }
+
+        $products = $query->cursorPaginate(30);
+
+        return $this->successResponse($products, "Products fetched successfully", 200);
+    }
+
+
+
 }
