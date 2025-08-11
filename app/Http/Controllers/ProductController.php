@@ -10,7 +10,8 @@ class ProductController extends Controller
     use APIResponseTrait;
     // category_id    priceRange from to   
     //دي الحجات اللي الفرونت ممكن يبعتها
-    public function getProducts(Request $request){
+    public function getProductsWithPagination(Request $request)
+    {
         $query=Product::join("categories","products.category_id","=","categories.id")->select("categories.*","products.*");
         
         if($request->filled("category")){
@@ -25,7 +26,6 @@ class ProductController extends Controller
 
         return $this->successResponse($products,"products fetched successfully",200);
     }
-
 
     //sorted=price or latest  order=[desc or asc] 
     //دي الحجات اللي الفرونت ممكن يبعتها
@@ -57,6 +57,22 @@ class ProductController extends Controller
         return $this->successResponse($products, "Products fetched successfully", 200);
     }
 
+    // category_id    priceRange from to   
+    //دي الحجات اللي الفرونت ممكن يبعتها
+    public function getProductsWithoutPagination(Request $request){
+        $query=Product::join("categories","products.category_id","=","categories.id")->select("categories.*","products.*");
+        
+        if($request->filled("category")){
+            $query->where("categories.id",$request->category_id);
+        }
 
+        if($request->filled("from")&&$request->filled("to")){
+            $query->where("products.base_price",">=",$request->from);
+            $query->where("products.base_price","<=",$request->to);
+        }
+        $products = $query->get();
+
+        return $this->successResponse($products,"products fetched successfully",200);
+    }
 
 }
