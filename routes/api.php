@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\UserController;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +33,12 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
     return response()->json(['message' => 'Email verified successfully']);
 })->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
 
-Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
+
+
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::apiResource('users', UserController::class);
+    Route::post('user/addresses',[AddressesController::class,'store']);
+    Route::put('user/addresses/{id}',[AddressesController::class,'update']);
+    Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
+
+});
