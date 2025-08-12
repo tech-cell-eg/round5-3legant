@@ -38,5 +38,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::apiResource('users', UserController::class);
     Route::post('user/addresses',[AddressesController::class,'store']);
+    Route::put('user/addresses/{id}',[AddressesController::class,'update']);
+    Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
 
 });
