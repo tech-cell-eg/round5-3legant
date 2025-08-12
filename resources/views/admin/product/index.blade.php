@@ -30,7 +30,6 @@
             'Name',
             'Description',
             'Category',
-
             'Price',
             ['label' => 'Actions', 'no-export' => true, 'width' => 10],
         ];
@@ -50,11 +49,21 @@
                         <i class="fa fa-lg fa-fw fa-pen"></i>
                     </button>
                     <button class="btn btn-xs btn-default text-danger mx-1 shadow" data-toggle="modal"
-                        data-target="#deleteModal">
+                        data-target="#deleteModal{{ $product->id }}">
                         <i class="fa fa-lg fa-fw fa-trash"></i>
                     </button>
                 </td>
             </tr>
+            <x-adminlte-modal id="deleteModal{{ $product->id }}" title="Delete Product" theme="danger"
+                icon="fas fa-trash">
+                <p>Are you sure you want to delete <strong>{{ $product->name }}</strong>?</p>
+                <form action="{{ route('products.destroy', $product->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <x-adminlte-button type="submit" label="Yes, Delete" theme="danger" class="mr-2" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                </form>
+            </x-adminlte-modal>
         @endforeach
     </x-adminlte-datatable>
 

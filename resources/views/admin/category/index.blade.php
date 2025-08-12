@@ -40,7 +40,7 @@
         </x-adminlte-modal>
         {{-- The table and modals->edit,delete --}}
         @php
-            $heads = ['ID', 'Name', 'Parent', ['label' => 'Actions', 'no-export' => true, 'width' => 20]];
+            $heads = ['ID', 'Name', 'Parent', ['label' => 'Actions', 'no-export' => true, 'width' => 10]];
         @endphp
         <x-adminlte-datatable id="categoriesTable" :heads="$heads" striped hoverable bordered>
             @foreach ($categories as $category)
@@ -48,7 +48,7 @@
                     <td>{{ $category->id }}</td>
                     <td>{{ $category->name }}</td>
                     <td>{{ $category->parent?->name ?? '—' }}</td>
-                    <nobr>
+                    <td>
                         <button class="btn btn-xs btn-default text-primary mx-1 shadow" data-toggle="modal"
                             data-target="#updateModal{{ $category->id }}">
                             <i class="fa fa-lg fa-fw fa-pen"></i>
@@ -57,7 +57,7 @@
                             data-target="#deleteModal{{ $category->id }}">
                             <i class="fa fa-lg fa-fw fa-trash"></i>
                         </button>
-                    </nobr>
+                    </td>
                 </tr>
                 <x-adminlte-modal id="updateModal{{ $category->id }}" title="Update Category">
                     <form action="{{ route('categories.update', $category->id) }}" method="POST">

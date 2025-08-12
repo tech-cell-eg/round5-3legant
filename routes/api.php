@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\API\UserController;
+use App\Models\User;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\Api\EmailVerifyController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 // Route::get('/user', function (Request $request) {
@@ -25,11 +27,8 @@ Route::post('/email/verification-notification', function (Request $request) {
     }
     $request->user()->sendEmailVerificationNotification();
     return response()->json(['message' => 'Verification link sent!'], 201);
-})->middleware(['auth:sanctum', 'throttle:6,1'])->name('verification.send');
+})->middleware(['throttle:6,1'])->name('verification.send');
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
-    return response()->json(['message' => 'Email verified successfully']);
-})->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+Route::get('/email/verify/{id}/{hash}', [EmailVerifyController::class, 'verify'])->middleware(['signed'])->name('verification.verify');
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');

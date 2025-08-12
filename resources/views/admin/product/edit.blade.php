@@ -5,9 +5,7 @@
 @section('content_header')
     <h1>Edit Product</h1>
 @stop
-
 @section('content')
-
     {{-- Alerts --}}
     @if (session('success'))
         <div class="col-sm">
