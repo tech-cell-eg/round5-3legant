@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\AddressesController;
+use App\Http\Controllers\API\UserController;
+use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\ProductController;
@@ -37,3 +39,16 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 Route::get("/products",[ProductController::class,'getProductsWithPagination']);
 Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
 Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
+
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::apiResource('users', UserController::class);
+    Route::post('user/addresses',[AddressesController::class,'store']);
+    Route::put('user/addresses/{id}',[AddressesController::class,'update']);
+    Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
+
+});
+  
+  
+  
+  
+  
