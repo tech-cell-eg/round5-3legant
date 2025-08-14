@@ -67,10 +67,7 @@
                                 </x-slot>
                             </x-adminlte-input>
                         </div>
-                        <div class="col-md-12">
-                            <label>Product Images</label>
-                            <input type="file" name="product_images[]" multiple class="form-control" accept="image/*">
-                        </div>
+
                         <div class="col-12">
                             <h4>Product Variations</h4>
                             <div id="variations-wrapper"></div>
@@ -125,7 +122,10 @@
                                 <label>Price</label>
                                 <input type="number" name="variations[${variationIndex}][price]" class="form-control" step="0.01" min="0">
                             </div>
-
+                        <div class="col-md-12">
+                            <label>Product Images</label>
+                            <input type="file" name="variations[${variationIndex}][product_images][]" multiple class="form-control" accept="image/*">
+                        </div>
                         </div>
                         <button type="button" class="btn btn-danger btn-sm mt-2 remove-variation">Remove</button>
                     </div>
@@ -143,6 +143,5 @@
             });
         </script>
     @endpush
-
 
 @stop

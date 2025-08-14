@@ -41,7 +41,7 @@ class ProductController extends Controller {
             ]);
             if (!empty($request->variations)) {
                 foreach ($request->variations as $var) {
-                    ProductVariation::create([
+                    $variation = ProductVariation::create([
                         'product_id' => $product->id,
                         'color' => $var['color'] ?? null,
                         'size' => $var['size'] ?? null,
@@ -49,20 +49,13 @@ class ProductController extends Controller {
                         'quantity' => $var['quantity'] ?? 0,
                         'price' => $var['price'] ?? $product->base_price,
                     ]);
-                }
-            }
-            // dd($request);
-            if ($request->hasFile('product_images')) {
-                $imageNumber = 1;
-                $date = now()->format('Ymd');
-                foreach ($request->file('product_images') as $image) {
-                    $extension = $image->getClientOriginalExtension();
-                    $imageName = "PRO-{$date}-{$imageNumber}.{$extension}";
-                    $path = $image->storeAs('product_images', $imageName, 'public');
-                    ProductImage::create([
-                        'product_id' => $product->id,
-                        'image' => $path,
-                    ]);
+                    if (isset($var['product_images']) && is_array($var['product_images'])) {
+                        $imageNumber = 0;
+                        foreach (($var['product_images']) as $image) {
+                            $imageNumber++;
+                            $this->saveVariationImage($variation, $image, $imageNumber);
+                        }
+                    }
                 }
             }
             if ($request->action == 'save') {
@@ -70,28 +63,79 @@ class ProductController extends Controller {
             }
             return back()->with('success', 'Product Created Successfully');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Somting went Wrong' . $e->getMessage());
+            return back()->with('error', 'Somting went Wrong' . $e->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id) {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id) {
-        //
+        $product = Product::findOrFail($id);
+        $categories = Category::pluck('name', 'id')->toArray();
+        $variations = ProductVariation::where('product_id', '=', $id)->with('images')->get();
+        return view('admin.product.edit', compact('product', 'variations', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id) {
+        $product = Product::findOrFail($id);
+        $product->update([
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'description' => $request->description,
+            'base_price' => $request->base_price,
+        ]);
+        if (!empty($request->variations)) {
+            foreach ($request->variations as $key => $var) {
+                if (str_starts_with($key, 'new_')) {
+                    $variation = ProductVariation::create([
+                        'product_id' => $product->id,
+                        'color' => $var['color'] ?? null,
+                        'size' => $var['size'] ?? null,
+                        'measurements' => $var['measurements'] ?? null,
+                        'quantity' => $var['quantity'] ?? 0,
+                        'price' => $var['price'] ?? $product->base_price,
+                    ]);
+                    if (!empty($var['product_images'])) {
+                        $imageNumber = 0;
+                        foreach ($var['product_images'] as $image) {
+                            $imageNumber++;
+                            $this->saveVariationImage($variation, $image, $imageNumber);
+                        }
+                    }
+                } else {
+                    $variation = ProductVariation::findOrFail($key);
+                    $variation->update([
+                        'color' => $var['color'] ?? null,
+                        'size' => $var['size'] ?? null,
+                        'measurements' => $var['measurements'] ?? null,
+                        'quantity' => $var['quantity'] ?? 0,
+                        'price' => $var['price'] ?? $product->base_price,
+                    ]);
+                    if (!empty($request->file("variation_images.$key"))) {
+                        $imageNumber = 0;
+                        foreach ($request->file("variation_images.$key") as $image) {
+                            $imageNumber++;
+                            $this->saveVariationImage($variation, $image, $imageNumber);
+                        }
+                    }
+                }
+            }
+        }
+        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+    }
+
+    // Handle images
+    private function saveVariationImage(ProductVariation $variation, $image, $imageNumber) {
+        $date = now()->format('Ymd');
+        $extension = $image->getClientOriginalExtension();
+        $imageName = "PR{$variation->product_id}-VAR{$variation->id}-{$date}-{$imageNumber}." . $extension;
+        $path = $image->storeAs('product_images', $imageName, 'public');
+        ProductImage::create([
+            'product_variation_id' => $variation->id,
+            'image' => $path,
+        ]);
     }
 
     /**
@@ -100,7 +144,7 @@ class ProductController extends Controller {
     public function destroy(string $id) {
         $product = Product::findOrFail($id);
         $product->delete();
-        return redirect()->route('products.index')
+        return back()
             ->with('success', 'Product deleted successfully.');
     }
 }

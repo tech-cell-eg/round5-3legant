@@ -15,7 +15,7 @@ class EmailVerifyController extends Controller {
         if (! hash_equals(sha1($user->getEmailForVerification()), (string) $hash)) {
             abort(403);
         }
-        if ($user->email_verified_at) {
+        if ($user->hasVerifiedEmail()) {
             return view('messages.alreadyVerified');
         }
         $user->markEmailAsVerified();

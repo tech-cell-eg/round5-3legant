@@ -8,20 +8,7 @@
 
     @section('content')
         {{-- Alerts --}}
-        @if (session('success'))
-            <div class="col-sm">
-                <x-adminlte-alert theme="success" title="Success" id="autoCloseAlert" class="p-2" dismissable>
-                    {{ session('success') }}
-                </x-adminlte-alert>
-            </div>
-        @endif
-        @if (session('error'))
-            <x-adminlte-alert theme="danger" title="Error" dismissable>
-                {{ session('error') }}
-            </x-adminlte-alert>
-        @endif
-        {{-- Add category section --}}
-
+        @include('admin.partials.alerts')
         <x-adminlte-button label="Add Category" data-toggle="modal" data-target="#createModal" class="mb-3" theme="primary"
             icon="fas fa-plus" />
         <x-adminlte-modal id="createModal" title="Add New Category">
@@ -38,7 +25,6 @@
                 <x-adminlte-button type="submit" label="Create" theme="success" class="mt-3" />
             </form>
         </x-adminlte-modal>
-        {{-- The table and modals->edit,delete --}}
         @php
             $heads = ['ID', 'Name', 'Parent', ['label' => 'Actions', 'no-export' => true, 'width' => 10]];
         @endphp
