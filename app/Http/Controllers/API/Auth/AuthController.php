@@ -2,17 +2,21 @@
 
 namespace App\Http\Controllers\API\Auth;
 
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\PasswordOTP;
 use Illuminate\Http\Request;
+use App\Mail\PasswordOTPMail;
+use PhpParser\Node\Expr\Throw_;
 use App\Traits\APIResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Support\Facades\Password;
-use PhpParser\Node\Expr\Throw_;
+use App\Http\Requests\Auth\RegisterRequest;
 
 class AuthController extends Controller {
 
@@ -64,14 +68,20 @@ class AuthController extends Controller {
     }
 
     //Reset password funcitons
-    public function sendPasswordResetMessage(Request $request) {
+    public function sendPasswordResetOTP(Request $request) {
         try {
             $request->validate([
                 'email' => 'required|email|exists:users,email'
             ]);
-            $status = Password::sendResetLink($request->only('email'));
-            return $status === Password::RESET_LINK_SENT ? $this->successResponse([], 'Reset link sent to your email', 200)
-                : $this->errorResponse([], 'Unable to send reset link', 500);
+            $email = $request->email;
+            $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
+            PasswordOTP::create([
+                'otp' => $otp,
+                'email' => $email,
+                'expires_at' => now()->addMinutes(10),
+            ]);
+            Mail::to($email)->send(new PasswordOTPMail($otp));
+            return $this->successResponse([], 'OTP send to your email', 201);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
@@ -80,19 +90,23 @@ class AuthController extends Controller {
     public function resetPassword(Request $request) {
         try {
             $request->validate([
-                'token'    => 'required',
-                'email'    => 'required|email',
-                'password' => 'required|min:8|confirmed',
+                'email'    => 'required|email|exists:users,email',
+                'otp' => 'required|string',
+                'password' => 'required|confirmed|string|min:8'
             ]);
-            $status = Password::reset(
-                $request->only('email', 'password', 'password_confirmation', 'token'),
-                function ($user, $password) {
-                    $user->password = Hash::make($password);
-                    $user->save();
-                }
-            );
-            return $status === Password::PASSWORD_RESET ? $this->successResponse([], 'Password reset successful', 200)
-                : $this->errorResponse([], 'Unable to reset password', 500);
+            $OTP = PasswordOTP::where('email', $request->email)->and('otp', $request->otp)->and('expires_at', '>', now())->get();
+            if (!$OTP) {
+                return $this->errorResponse([], 'Invalid OTP', 400);
+            }
+            $user = User::where('email', $request->email)->get();
+            if (!$user) {
+                return $this->errorResponse([], 'User not found', 404);
+            }
+            $user->update([
+                'password' => $request->password,
+            ]);
+            $OTP->markAsUsed();
+            return $this->successResponse([], 'Password reset successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
