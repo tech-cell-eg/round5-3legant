@@ -50,13 +50,7 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
 
 });
   
-  
-  
-  
-  
-
-
-
+ 
 //Home Page
   Route::get('/home/categories', [\App\Http\Controllers\Api\HomeController::class, 'categories']);
   Route::get('/home/new-arrivals', [\App\Http\Controllers\Api\HomeController::class, 'newArrivals']);
