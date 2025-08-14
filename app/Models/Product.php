@@ -9,6 +9,7 @@ class Product extends Model
     protected $fillable = ['name','description','base_price','category_id'];
 
 
+
     function categories(){
         return $this->belongsto(Category::class);
     }
@@ -21,6 +22,7 @@ class Product extends Model
      function reviews(){
         return $this->hasMany(Review::class);
     }
+
 
     public function collections()
       {

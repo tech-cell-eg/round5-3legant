@@ -37,6 +37,7 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 
 
+
 Route::get("/products",[ProductController::class,'getProductsWithPagination']);
 Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
 Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
@@ -54,6 +55,8 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
   
   
 
+
+
 //Home Page
   Route::get('/home/categories', [\App\Http\Controllers\Api\HomeController::class, 'categories']);
   Route::get('/home/new-arrivals', [\App\Http\Controllers\Api\HomeController::class, 'newArrivals']);
@@ -63,7 +66,6 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
   Route::get('/blog/list', [\App\Http\Controllers\Api\HomeController::class, 'blogList']);
   Route::get('/blog/{id}', [\App\Http\Controllers\Api\HomeController::class, 'blogDetails']);
   
-
 
 
 
