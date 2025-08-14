@@ -12,4 +12,7 @@ class Address extends Model {
     {
         return $this->belongsTo(User::class);
     }
+    function order(){
+        return $this->hasMany(Order::class);
+    }
 }
