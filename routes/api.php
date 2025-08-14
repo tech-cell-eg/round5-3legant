@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\WishlistController;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
@@ -48,6 +49,7 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::put('user/addresses/{id}',[AddressesController::class,'update']);
     Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
 
+    Route::get('wishlist', [WishlistController::class, 'index']);
 });
   
  
