@@ -55,5 +55,29 @@ class WishlistController extends Controller
         ]);
 
     }
+
+
+    public function removeProduct(Request $request, $productId)
+    {
+        $wishlist = Wishlist::where('user_id', auth()->id())->first();
+        if (!$wishlist) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Wishlist not found'
+            ], 404);
+        }
+
+        if (!$wishlist->products()->where('product_id', $productId)->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found in wishlist'
+            ]);
+        }
+          $wishlist->products()->detach($productId);
+           return response()->json([
+            'status' => true,
+            'message' => 'Product removed from wishlist successfully'
+        ], 200);
+    }
     
 }
