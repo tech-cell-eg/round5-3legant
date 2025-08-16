@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 
@@ -21,6 +22,36 @@ class WishlistController extends Controller
         return response()->json([
             'status' => true,
             'data' => $products
+        ]);
+
+    }
+
+
+    public function addProduct(Request $request , $productId)
+    {
+        $product = Product::find($productId);
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        $wishlist = Wishlist::firstOrCreate([
+            'user_id' => auth()->id(),
+        ]);
+        if ($wishlist->products()->where('product_id', $productId)->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Product already in wishlist'
+            ]);
+        }
+
+            $wishlist->products()->attach($productId);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Product added to wishlist successfully',
         ]);
 
     }
