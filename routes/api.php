@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
 
     Route::get('wishlist', [WishlistController::class, 'index']);
+    Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
 });
   
  
