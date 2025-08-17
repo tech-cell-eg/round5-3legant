@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\EmailVerifyController;
 use App\Http\Controllers\ProductController;
 
 
+
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('forget-password', [AuthController::class, 'sendPasswordResetOTP']);
@@ -46,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 });
 
 
+
 //Home Page
 Route::get('/home/categories', [\App\Http\Controllers\Api\HomeController::class, 'categories']);
 Route::get('/home/new-arrivals', [\App\Http\Controllers\Api\HomeController::class, 'newArrivals']);
@@ -54,3 +57,31 @@ Route::get('/home/shop-collections', [\App\Http\Controllers\Api\HomeController::
 Route::get('/home/best-sellers', [\App\Http\Controllers\Api\HomeController::class, 'bestSellers']);
 Route::get('/blog/list', [\App\Http\Controllers\Api\HomeController::class, 'blogList']);
 Route::get('/blog/{id}', [\App\Http\Controllers\Api\HomeController::class, 'blogDetails']);
+
+Route::get("/products",[ProductController::class,'getProductsWithPagination']);
+Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
+Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
+Route::get("/products-search",[ProductController::class,'productSearch']);
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::apiResource('users', UserController::class);
+    Route::post('user/addresses',[AddressesController::class,'store']);
+    Route::put('user/addresses/{id}',[AddressesController::class,'update']);
+    Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
+
+    Route::get('wishlist', [WishlistController::class, 'index']);
+    Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
+    Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+});
+  
+ 
+//Home Page
+  Route::get('/home/categories', [\App\Http\Controllers\Api\HomeController::class, 'categories']);
+  Route::get('/home/new-arrivals', [\App\Http\Controllers\Api\HomeController::class, 'newArrivals']);
+  Route::get('/home/more-products', [\App\Http\Controllers\Api\HomeController::class, 'moreProducts']);
+  Route::get('/home/shop-collections', [\App\Http\Controllers\Api\HomeController::class, 'shopCollections']);
+  Route::get('/home/best-sellers', [\App\Http\Controllers\Api\HomeController::class, 'bestSellers']);
+  Route::get('/blog/list', [\App\Http\Controllers\Api\HomeController::class, 'blogList']);
+  Route::get('/blog/{id}', [\App\Http\Controllers\Api\HomeController::class, 'blogDetails']);
+  
+
+
