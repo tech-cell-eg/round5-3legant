@@ -75,8 +75,7 @@ class ProductController extends Controller
         return $this->successResponse($products,"products fetched successfully",200);
     }
 
-    public function productSearch(Request $request)
-    {
+    public function productSearch(Request $request){
         $search = $request->search;
 
         $products = Product::where('base_price', 'LIKE', "%{$search}%")
@@ -88,8 +87,7 @@ class ProductController extends Controller
     }
 
 
-    public function productDetails($id)
-        {
+        public function productDetails($id){
             $product = Product::query()
                 ->join("product_images", "products.id", "=", "product_images.product_id")
                 ->join("product_variations", "products.id", "=", "product_variations.product_id")
