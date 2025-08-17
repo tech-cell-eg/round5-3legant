@@ -22,3 +22,6 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/lang/vendor/adminlte/*
+!/lang/vendor/adminlte/en
+

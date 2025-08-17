@@ -2,34 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
-{
-    protected $fillable = ['name','description','base_price','category_id'];
-
-
-
-
-    function categories(){
-        return $this->belongsto(Category::class);
+class Product extends Model {
+    use HasFactory;
+    protected $fillable = ['name', 'description', 'base_price', 'category_id'];
+    public function category() {
+        return $this->belongsTo(Category::class);
     }
-     function wishlist(){
+    function wishlist() {
         return $this->belongsToMany(Wishlist::class);
     }
-     function productVariations(){
+    function productVariations() {
         return $this->hasMany(ProductVariation::class);
     }
-     function reviews(){
+    function reviews() {
         return $this->hasMany(Review::class);
     }
-
-
-    public function collections()
-      {
-          return $this->belongsToMany(Collection::class);
-      }
-
-
-
+    public function collections() {
+        return $this->belongsToMany(Collection::class);
+    }
 }

@@ -5,8 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Product;
-class ProductSeeder extends Seeder
-{
+use App\Models\ProductVariation;
+
+class ProductSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
@@ -43,5 +44,10 @@ class ProductSeeder extends Seeder
             'category_id' => 1
             ]);
 
+    public function run(): void {
+        Product::factory()
+            ->count(15)
+            ->has(ProductVariation::factory()->count(3), 'variations')
+            ->create();
     }
 }

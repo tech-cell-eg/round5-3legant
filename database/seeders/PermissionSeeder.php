@@ -7,13 +7,11 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\User;
 
-class PermissionSeeder extends Seeder
-{
+class PermissionSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
-    public function run(): void
-    {
+    public function run(): void {
         $permissions = [
             'create admin',
             'edit admin',
@@ -30,7 +28,7 @@ class PermissionSeeder extends Seeder
             'delete category',
             'publish category',
 
-            'make order' 
+            'make order'
         ];
 
         foreach ($permissions as $permission) {
@@ -42,25 +40,26 @@ class PermissionSeeder extends Seeder
         $customerRole = Role::firstOrCreate(['name' => 'customer']);
 
         $SadminRole->givePermissionTo(Permission::all());
-        $adminRole->givePermissionTo(['create product',
-                                    'edit product',
-                                    'publish product']);
+        $adminRole->givePermissionTo([
+            'create product',
+            'edit product',
+            'publish product'
+        ]);
         $customerRole->givePermissionTo(['make order']);
 
-        $admin = User::where('email', 'adminExample.com')->first();;
+        $admin = User::where('email', 'admin@Example.com')->first();;
         if ($admin) {
             $admin->assignRole('admin');
         }
 
-        $Sadmin = User::where('email', 'superAdminExample.com')->first();;
+        $Sadmin = User::where('email', 'superAdmin@Example.com')->first();;
         if ($Sadmin) {
             $Sadmin->assignRole('Sadmin');
         }
 
-        $customer = User::where('email', 'customerExample.com')->first();
+        $customer = User::where('email', 'customer@Example.com')->first();
         if ($customer) {
             $customer->assignRole('customer');
         }
-
     }
 }
