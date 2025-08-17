@@ -11,6 +11,7 @@ class ProductVariationsSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
+        
     public function run(): void
     {
         $productVariation=new ProductVariation();
@@ -60,6 +61,5 @@ class ProductVariationsSeeder extends Seeder {
         $productVariation->price=30;
         $productVariation->size="large";
         $productVariation->save();
-    
-}
+    }
 }

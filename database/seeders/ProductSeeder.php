@@ -44,7 +44,7 @@ class ProductSeeder extends Seeder {
             'category_id' => 1
             ]);
 
-    public function run(): void {
+   
         Product::factory()
             ->count(15)
             ->has(ProductVariation::factory()->count(3), 'variations')
