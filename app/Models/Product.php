@@ -11,26 +11,16 @@ class Product extends Model {
     public function category() {
         return $this->belongsTo(Category::class);
     }
-    public function variations() {
-        return $this->hasMany(ProductVariation::class);
-    }
-    function categories(){
-        return $this->belongsto(Category::class);
-    }
-     function wishlist(){
+    function wishlist() {
         return $this->belongsToMany(Wishlist::class);
     }
-     function productVariations(){
+    function productVariations() {
         return $this->hasMany(ProductVariation::class);
     }
-     function reviews(){
+    function reviews() {
         return $this->hasMany(Review::class);
     }
-    public function collections()
-      {
-          return $this->belongsToMany(Collection::class);
-      }
-
-
-
+    public function collections() {
+        return $this->belongsToMany(Collection::class);
+    }
 }

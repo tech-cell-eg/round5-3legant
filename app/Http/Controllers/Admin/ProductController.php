@@ -16,7 +16,7 @@ class ProductController extends Controller {
      * Display a listing of the resource.
      */
     public function index() {
-        $products = Product::with(['variations', 'category'])->get();
+        $products = Product::with(['productVariations', 'category'])->get();
         return view('admin.product.index', compact('products'));
     }
 
