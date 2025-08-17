@@ -16,17 +16,17 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
 
-        // $this->call(AddressSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(AddressSeeder::class);
         // $this->call(BlogSeeder::class);
         // $this->call(CartSeeder::class);
         // $this->call(CartDetailsSeeder::class);
         $this->call(CategorySeeder::class);
-        // $this->call(OrderSeeder::class);
+        $this->call(OrderSeeder::class);
         // $this->call(ProductImagesSeeder::class);
         $this->call(ProductSeeder::class);
         // $this->call(ProductVariationsSeeder::class);
         // $this->call(ReviewSeeder::class);
-        $this->call(UserSeeder::class);
         // $this->call(WishListSeeder::class);
         // $this->call(OrderItemsSeeder::class);
         $this->call(PermissionSeeder::class);

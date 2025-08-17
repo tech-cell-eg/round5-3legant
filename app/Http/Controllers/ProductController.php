@@ -75,4 +75,17 @@ class ProductController extends Controller
         return $this->successResponse($products,"products fetched successfully",200);
     }
 
+    public function productSearch(Request $request)
+    {
+        $search = $request->search;
+
+        $products = Product::where('base_price', 'LIKE', "%{$search}%")
+            ->orWhere('name', 'LIKE', "%{$search}%")
+            ->orWhere('description', 'LIKE', "%{$search}%")
+            ->get();
+
+        return $this->successResponse($products, "Products fetched successfully");
+    }
+
+
 }
