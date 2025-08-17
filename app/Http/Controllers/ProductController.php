@@ -88,4 +88,30 @@ class ProductController extends Controller
     }
 
 
+    public function productDetails($id)
+        {
+            $product = Product::query()
+                ->join("product_images", "products.id", "=", "product_images.product_id")
+                ->join("product_variations", "products.id", "=", "product_variations.product_id")
+                ->where("products.id", $id)
+                ->select("products.*", "product_images.*", "product_variations.*")
+                ->first();
+
+            if (!$product) {
+                return $this->errorResponse("The product is not found", 404);
+            }
+
+            return $this->successResponse($product, "Product fetched successfully", 200);
+        }
+
+     public function relatedProducts($category_id){
+        $products=Product::where("category_id","=",$category_id)->cursorPaginate(30);
+         if (!$products) {
+                return $this->errorResponse("there are not any products", 404);
+            }
+
+            return $this->successResponse($products, "Products fetched successfully", 200);
+     }   
+
+
 }

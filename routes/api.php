@@ -38,11 +38,14 @@ Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $requ
 
 
 
-
-Route::get("/products",[ProductController::class,'getProductsWithPagination']);
-Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
-Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
-Route::get("/products-search",[ProductController::class,'productSearch']);
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get("/products",[ProductController::class,'getProductsWithPagination']);
+    Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
+    Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
+    Route::get("/products-search",[ProductController::class,'productSearch']);
+    Route::get("/products/{id}",[ProductController::class,'productDetails']);
+    Route::get("/related-products/{category_id}",[ProductController::class,'relatedProducts']);
+});
 
 Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::apiResource('users', UserController::class);

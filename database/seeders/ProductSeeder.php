@@ -20,7 +20,7 @@ class ProductSeeder extends Seeder
             ]);
             Product::create([
             'name'        => "door",
-            'description' => "black small chair",
+            'description' => "black small door",
             'base_price'  => 40,
             'category_id' => 2
             ]);
@@ -32,7 +32,7 @@ class ProductSeeder extends Seeder
             ]);
             Product::create([
             'name'        => "table",
-            'description' => "whte small table",
+            'description' => "white small table",
             'base_price'  => 30,
             'category_id' => 1
             ]);
