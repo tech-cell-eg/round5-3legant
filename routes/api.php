@@ -3,6 +3,7 @@
 use App\Models\User;
 use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\Api\CheckoutController;
 use  Illuminate\Http\Request;
@@ -44,6 +45,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('wishlist', [WishlistController::class, 'index']);
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+    Route::get('orders', [OrderController::class,'index']);
     //User Cart
     Route::get('cart', [CartController::class, 'index']);
     Route::post('add-to-cart', [CartController::class, 'addToCart']);

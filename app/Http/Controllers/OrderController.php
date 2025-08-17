@@ -4,10 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    function orders(){
+    public function index(Request $request)
+    {
+        $user = Auth::user();
+        $orders = Order::with(['items.productVariation'])
+        ->where('user_id', $user->id)
+        ->latest()
+        ->paginate(10);
+
+
+        return response()->json([
+            'status'=>true,
+            'data'=> $orders
+        ]);
+    }
+        function orders(){
         $orders=Order::join("users","orders.user_id","=","users.id")
         ->join("addresses","users.id",'=',"addresses.user_id")
         ->select("users.*","orders.*","addresses.*")->get();
@@ -29,5 +44,12 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Status updated successfully']);
     }
-
 }
+
+
+
+
+
+
+
+   
