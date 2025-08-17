@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\WishlistController;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -52,6 +53,7 @@ Route::group(['middleware' => ['auth:sanctum']], function (){
     Route::get('wishlist', [WishlistController::class, 'index']);
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+    Route::get('orders', [OrderController::class,'index']);
 });
   
  
