@@ -17,6 +17,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Password;
 use App\Http\Requests\Auth\RegisterRequest;
+use App\Models\PasswordOtp as ModelsPasswordOtp;
 
 class AuthController extends Controller {
 
@@ -67,7 +68,6 @@ class AuthController extends Controller {
         }
     }
 
-    //Reset password funcitons
     public function sendPasswordResetOTP(Request $request) {
         try {
             $request->validate([
@@ -75,7 +75,7 @@ class AuthController extends Controller {
             ]);
             $email = $request->email;
             $otp = str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT);
-            PasswordOTP::create([
+            PasswordOtp::create([
                 'otp' => $otp,
                 'email' => $email,
                 'expires_at' => now()->addMinutes(10),
@@ -94,18 +94,20 @@ class AuthController extends Controller {
                 'otp' => 'required|string',
                 'password' => 'required|confirmed|string|min:8'
             ]);
-            $OTP = PasswordOTP::where('email', $request->email)->and('otp', $request->otp)->and('expires_at', '>', now())->get();
+            $OTP = ModelsPasswordOtp::where('email', $request->email)->where('otp', $request->otp)->where('expires_at', '>', now())->first();
             if (!$OTP) {
                 return $this->errorResponse([], 'Invalid OTP', 400);
             }
-            $user = User::where('email', $request->email)->get();
+            $user = User::where('email', $request->email)->first();
             if (!$user) {
                 return $this->errorResponse([], 'User not found', 404);
             }
             $user->update([
-                'password' => $request->password,
+                'password' => Hash::make($request->password),
             ]);
-            $OTP->markAsUsed();
+            $OTP->update([
+                'is_used' => true
+            ]);
             return $this->successResponse([], 'Password reset successfully');
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
