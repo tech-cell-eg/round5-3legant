@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Cart extends Model {
+    use HasFactory;
     protected $fillable = ['user_id', 'sub_total', 'total_price', 'shipping_type', 'shipping_cost'];
 
     public function user() {
