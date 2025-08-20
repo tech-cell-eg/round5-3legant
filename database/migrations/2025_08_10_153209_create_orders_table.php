@@ -11,11 +11,24 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('address_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('address_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->decimal('sub_total', 8, 2)->default(0);
-            $table->decimal('final_price', 8, 2)->default(0);
-            $table->enum('status', ['pending', 'shipped', 'delivered', 'cancelled']);
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('final_price', 10, 2)->default(0);
+            $table->enum('status', ['pending', 'shipped', 'delivered', 'cancelled'])
+                  ->default('pending');
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('phone');
+            $table->string('email');
+            $table->string('address');
+            $table->string('country');
+            $table->string('city');
+            $table->string('state')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->enum('payment_method', ['cash', 'credit_card', 'paypal']);
+            $table->decimal('discount', 10, 2)->default(0);
+            $table->decimal('total', 10, 2);
             $table->timestamps();
         });
     }

@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\Api\EmailVerifyController;
 
@@ -73,3 +77,7 @@ Route::get('/home/shop-collections', [HomeController::class, 'shopCollections'])
 Route::get('/home/best-sellers', [HomeController::class, 'bestSellers']);
 Route::get('/blog/list', [HomeController::class, 'blogList']);
 Route::get('/blog/{id}', [HomeController::class, 'blogDetails']);
+//Checkout
+Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
+
+
