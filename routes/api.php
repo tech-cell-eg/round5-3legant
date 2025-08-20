@@ -44,12 +44,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
     //User Cart
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/add-to-cart', [CartController::class, 'addToCart']);
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('add-to-cart', [CartController::class, 'addToCart']);
     Route::delete('remove-cart-item/{cartItemId}', [CartController::class, 'removeItem']);
     Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateItem']);
-    Route::post('apply-coupon', [CartController::class, 'applyCoupon']);
-    Route::post('apply-shipping', [CartController::class, 'applyShipping']);
+    Route::post('cart/apply-coupon', [CartController::class, 'applyCoupon']);
+    Route::post('cart/apply-shipping', [CartController::class, 'applyShipping']);
 
 
 });

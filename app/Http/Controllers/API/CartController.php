@@ -55,7 +55,7 @@ class CartController extends Controller {
                 ]);
             }
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item added to cart', 201);
+            return $this->successResponse([], 'Item added to cart', 201);
         } catch (\Exception $e) {
             Log::error('Error : ' . $e->getMessage());
             $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
@@ -101,7 +101,7 @@ class CartController extends Controller {
                 ->first();
             if (!$cartItem) (throw new \Exception("Can't find cart item", 404));
             $productVariation = $cartItem->productVariation;
-            if (!$productVariation->checkStock($request->quantity)) {
+            if (!$productVariation->checkTheStock($request->quantity)) {
                 throw new \Exception('Stock not enough', 422);
             }
             $cart = $cartItem->cart;
@@ -109,7 +109,7 @@ class CartController extends Controller {
             $cartItem->sub_total = $request->quantity * $cartItem->price;
             $cartItem->save();
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item Updated', 200);
+            return $this->successResponse([], 'Item Updated', 200);
         } catch (\Exception $e) {
             $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
             return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be updated', $code);
@@ -124,7 +124,7 @@ class CartController extends Controller {
             $cart = $cartItem->cart;
             $cartItem->delete();
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item removed from cart', 200);
+            return $this->successResponse([], 'Item removed from cart', 200);
         } catch (\Exception $e) {
             $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
             return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be removed', $code);
