@@ -14,4 +14,9 @@ class ProductVariation extends Model {
     public function images() {
         return $this->hasMany(ProductImage::class);
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

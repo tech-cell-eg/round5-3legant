@@ -1,13 +1,16 @@
 <?php
 
+
+use App\Http\Controllers\API\AddressesController;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WishlistController;
+
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\Api\EmailVerifyController;
 
@@ -40,6 +43,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('wishlist', [WishlistController::class, 'index']);
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+
+    Route::get('orders', [OrderController::class,'index']);
+
     //User Cart
     Route::get('/cart', [CartController::class, 'index']);
     Route::post('/add-to-cart', [CartController::class, 'addToCart']);
@@ -47,6 +53,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateItem']);
     Route::post('apply-coupon', [CartController::class, 'applyCoupon']);
     Route::post('apply-shipping', [CartController::class, 'applyShipping']);
+
 });
 
 
