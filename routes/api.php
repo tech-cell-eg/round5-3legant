@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\Api\EmailVerifyController;
@@ -40,6 +42,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('wishlist', [WishlistController::class, 'index']);
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+
+    Route::get('orders', [OrderController::class, 'index']);
+
     //User Cart
     Route::get('cart', [CartController::class, 'index']);
     Route::post('add-to-cart', [CartController::class, 'addToCart']);
@@ -66,3 +71,5 @@ Route::get('/home/shop-collections', [HomeController::class, 'shopCollections'])
 Route::get('/home/best-sellers', [HomeController::class, 'bestSellers']);
 Route::get('/blog/list', [HomeController::class, 'blogList']);
 Route::get('/blog/{id}', [HomeController::class, 'blogDetails']);
+//Checkout
+Route::post('/checkout', [CheckoutController::class, 'placeOrder']);

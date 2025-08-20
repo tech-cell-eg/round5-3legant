@@ -7,9 +7,6 @@ use App\Models\Product;
 use App\Models\ProductVariation;
 
 class ProductSeeder extends Seeder {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void {
         Product::create([
             'name'        => "table",
@@ -41,6 +38,7 @@ class ProductSeeder extends Seeder {
             'base_price'  => 30,
             'category_id' => 1
         ]);
+
         Product::factory()
             ->count(15)
             ->has(ProductVariation::factory()->count(3), 'productVariations')
