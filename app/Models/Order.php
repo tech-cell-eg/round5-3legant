@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model {
-    protected $fillable = ['user_id', 'address_id', 'final_price', 'status'];
+    protected $fillable = ['user_id', 'address_id', 'final_price', 'status' , 'first_name', 'last_name', 'phone', 'email',
+        'address', 'country', 'city', 'state', 'zip_code',
+        'payment_method', 'subtotal', 'discount', 'total', 'status'];
     function address() {
         return $this->belongsTo(Address::class);
     }
@@ -15,4 +17,10 @@ class Order extends Model {
     public function coupon() {
         return $this->belongsTo(Coupon::class);
     }
+
+        public function items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
 }
