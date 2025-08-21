@@ -6,6 +6,8 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Auth;
+
 class OrderController extends Controller
 {
     public function index(Request $request)
@@ -22,7 +24,10 @@ class OrderController extends Controller
             'data'=> $orders
         ]);
     }
-        function orders(){
+
+
+
+    function orders(){
         $orders=Order::join("users","orders.user_id","=","users.id")
         ->join("addresses","users.id",'=',"addresses.user_id")
         ->select("users.*","orders.*","addresses.*")->get();

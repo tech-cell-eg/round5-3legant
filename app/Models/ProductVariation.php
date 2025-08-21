@@ -19,8 +19,7 @@ class ProductVariation extends Model {
         return ($quantity <= $this->quantity);
     }
 
-    public function orderItems()
-    {
+    public function orderItems() {
         return $this->hasMany(OrderItem::class);
     }
 }
