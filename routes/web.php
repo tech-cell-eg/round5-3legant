@@ -31,7 +31,7 @@ Route::middleware(['auth', 'role:Sadmin'])->prefix('admin')->group(function () {
     Route::get("/dashboard/users/create", [UserController::class, "createUserView"])->name("users.createUserView");
     Route::post("/dashboard/users/create", [UserController::class, "createUser"])->name("users.createUser");
     Route::get("/dashboard/users/edit/{id}", [UserController::class, "userEdit"])->name("users.edit");
-    Route::put("/dashboard/users/update/{id}", [UserController::class, "userUpdate"])->name("users.update");
+    Route::put("/dashboard/users/update/{id}", [UserController::class, "userUpdate"])->name("admin.users.update");
     Route::delete("/dashboard/users/delete/{id}", [UserController::class, "userDelete"])->name("users.delete");
     Route::get("/dashboard/users/{id}", [UserController::class, "userView"])->name("users.view");
 });

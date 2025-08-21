@@ -6,7 +6,6 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -57,4 +56,4 @@ class OrderController extends Controller
 
 
 
-   
+

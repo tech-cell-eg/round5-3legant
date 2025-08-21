@@ -11,7 +11,7 @@
         {{ session('message') }}
     </div>
 @endif
-    <form action={{ route('users.update',[$user->id]) }} method="post"  class="form-group">
+    <form action={{ route('admin.users.update',[$user->id]) }} method="post"  class="form-group">
             @csrf
     @method('PUT')
 
