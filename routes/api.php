@@ -86,6 +86,35 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get("/products-search", [ProductController::class, 'productSearch']);
     Route::get("/products/{id}", [ProductController::class, 'productDetails']);
     Route::get("/related-products/{id}", [ProductController::class, 'relatedProducts']);
+Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return response()->json(['message' => 'Email verified successfully']);
+})->middleware(['auth:sanctum', 'signed'])->name('verification.verify');
+
+
+
+
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::get("/products",[ProductController::class,'getProductsWithPagination']);
+    Route::get("/sorted-products",[ProductController::class,'sortedProducts']);
+    Route::get("/products-without-pagination",[ProductController::class,'getProductsWithoutPagination']);
+    Route::get("/products-search",[ProductController::class,'productSearch']);
+    Route::get("/products/{id}",[ProductController::class,'productDetails']);
+    Route::get("/related-products/{category_id}",[ProductController::class,'relatedProducts']);
+});
+
+Route::group(['middleware' => ['auth:sanctum']], function (){
+    Route::apiResource('users', UserController::class);
+    Route::post('user/addresses',[AddressesController::class,'store']);
+    Route::put('user/addresses/{id}',[AddressesController::class,'update']);
+    Route::delete('user/addresses/{id}',[AddressesController::class,'destroy']);
+
+    Route::get('wishlist', [WishlistController::class, 'index']);
+    Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
+    Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
+});
+  
+ 
 });
 
 
