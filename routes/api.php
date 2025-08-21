@@ -1,11 +1,6 @@
 <?php
 
-
-use App\Http\Controllers\API\AddressesController;
-use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\WishlistController;
-
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
@@ -48,16 +43,15 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('wishlist/{productId}', [WishlistController::class, 'addProduct']);
     Route::delete('/wishlist/{productId}', [WishlistController::class, 'removeProduct']);
 
-    Route::get('orders', [OrderController::class,'index']);
+    Route::get('orders', [OrderController::class, 'index']);
 
     //User Cart
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::post('/add-to-cart', [CartController::class, 'addToCart']);
+    Route::get('cart', [CartController::class, 'index']);
+    Route::post('add-to-cart', [CartController::class, 'addToCart']);
     Route::delete('remove-cart-item/{cartItemId}', [CartController::class, 'removeItem']);
     Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateItem']);
-    Route::post('apply-coupon', [CartController::class, 'applyCoupon']);
-    Route::post('apply-shipping', [CartController::class, 'applyShipping']);
-
+    Route::post('cart/apply-coupon', [CartController::class, 'applyCoupon']);
+    Route::post('cart/apply-shipping', [CartController::class, 'applyShipping']);
 });
 
 
@@ -79,5 +73,3 @@ Route::get('/blog/list', [HomeController::class, 'blogList']);
 Route::get('/blog/{id}', [HomeController::class, 'blogDetails']);
 //Checkout
 Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
-
-

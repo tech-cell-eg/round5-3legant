@@ -14,9 +14,11 @@ class ProductVariation extends Model {
     public function images() {
         return $this->hasMany(ProductImage::class);
     }
-
-    public function orderItems()
-    {
+    //This function will return true if the quantity you want to store is less than the product quantity
+    public function checkTheStock($quantity) {
+        return ($quantity <= $this->quantity);
+    }
+    public function orderItems() {
         return $this->hasMany(OrderItem::class);
     }
 }

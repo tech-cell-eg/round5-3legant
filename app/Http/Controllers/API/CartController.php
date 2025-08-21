@@ -36,6 +36,9 @@ class CartController extends Controller {
             ]);
             $cart = $this->getUserCart(auth()->id());
             $productVariation = ProductVariation::findOrFail($request->product_variation_id);
+            if (!$productVariation->checkTheStock($request->quantity)) {
+                throw new \Exception('Stock not enough', 422);
+            }
             $cartItem =  CartItem::where('cart_id', $cart->id)->where('product_variation_id', $productVariation->id)->first();
             if ($cartItem) {
                 $cartItem->quantity += $request->quantity;
@@ -52,10 +55,11 @@ class CartController extends Controller {
                 ]);
             }
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item added to cart', 201);
+            return $this->successResponse([], 'Item added to cart', 201);
         } catch (\Exception $e) {
             Log::error('Error : ' . $e->getMessage());
-            return $this->errorResponse($e->getMessage(), 'Somting went wrong', 500);
+            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
+            return $this->errorResponse($e->getMessage(), 'Somting went wrong', $code);
         }
     }
     public function calculateCart(Cart $cart) {
@@ -91,18 +95,24 @@ class CartController extends Controller {
             $request->validate([
                 'quantity' => 'required|integer|min:1'
             ]);
+
             $cartItem = CartItem::where('id', $cartItemId)
                 ->whereHas('cart', fn($q) => $q->where('user_id', auth()->id()))
                 ->first();
             if (!$cartItem) (throw new \Exception("Can't find cart item", 404));
+            $productVariation = $cartItem->productVariation;
+            if (!$productVariation->checkTheStock($request->quantity)) {
+                throw new \Exception('Stock not enough', 422);
+            }
             $cart = $cartItem->cart;
             $cartItem->quantity = $request->quantity;
             $cartItem->sub_total = $request->quantity * $cartItem->price;
             $cartItem->save();
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item Updated', 200);
+            return $this->successResponse([], 'Item Updated', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be updated', $e->getCode());
+            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
+            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be updated', $code);
         }
     }
     public function removeItem(Request $request, $cartItemId) {
@@ -114,9 +124,10 @@ class CartController extends Controller {
             $cart = $cartItem->cart;
             $cartItem->delete();
             $cart = $this->calculateCart($cart);
-            return $this->successResponse('Item removed from cart', 200);
+            return $this->successResponse([], 'Item removed from cart', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be removed', $e->getCode() ?? 500);
+            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
+            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be removed', $code);
         }
     }
     public function applyCoupon(Request $request) {
@@ -143,31 +154,36 @@ class CartController extends Controller {
             $cart = $this->calculateCart($cart);
             return $this->successResponse($cart, 'Coupon Applied successful', 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 'Can\'t apply coupon', 500);
+            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
+            return $this->errorResponse($e->getMessage(), 'Can\'t apply coupon', $code);
         }
     }
     public function applyShipping(Request $request) {
-        $request->validate([
-            'shipping_type' => 'required|in:free,express,pickup',
-        ]);
-        $cart = $this->getUserCart(auth()->id());
-        $subtotal = $cart->sub_total;
-        $shippingCost = 0;
-        switch ($request->shipping_type) {
-            case 'free':
-                $shippingCost = 0;
-                break;
-            case 'express':
-                $shippingCost = 15;
-                break;
-            case 'pickup':
-                $shippingCost = $subtotal * 0.21;
-                break;
+        try {
+            $request->validate([
+                'shipping_type' => 'required|in:free,express,pickup',
+            ]);
+            $cart = $this->getUserCart(auth()->id());
+            $subtotal = $cart->sub_total;
+            $shippingCost = 0;
+            switch ($request->shipping_type) {
+                case 'free':
+                    $shippingCost = 0;
+                    break;
+                case 'express':
+                    $shippingCost = 15;
+                    break;
+                case 'pickup':
+                    $shippingCost = $subtotal * 0.21;
+                    break;
+            }
+            $cart->shipping_type = $request->shipping_type;
+            $cart->shipping_cost = $shippingCost;
+            $cart = $this->calculateCart($cart);
+            return $this->successResponse($cart, 'Shipping applied', 200);
+        } catch (\Exception $e) {
+            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
+            return $this->errorResponse($e->getMessage(), 'Can\'t apply ', $code);
         }
-        $cart->shipping_type = $request->shipping_type;
-        $cart->shipping_cost = $shippingCost;
-        $cart = $this->calculateCart($cart);
-
-        return $this->successResponse($cart, 'Shipping applied', 200);
     }
 }
