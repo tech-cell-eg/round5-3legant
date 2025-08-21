@@ -89,7 +89,7 @@ class ProductController extends Controller
 
         public function productDetails($id){
             $product = Product::query()
-                ->join("product_images", "products.id", "=", "product_images.product_id")
+                ->join("product_images", "products.id", "=", "product_images.product_variation_id")
                 ->join("product_variations", "products.id", "=", "product_variations.product_id")
                 ->where("products.id", $id)
                 ->select("products.*", "product_images.*", "product_variations.*")
