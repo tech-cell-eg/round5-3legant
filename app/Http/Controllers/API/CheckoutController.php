@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -37,7 +37,7 @@ class CheckoutController extends Controller
                 $subtotal += $item['quantity'] * $variation->price;
             }
 
-            $discount = 0; 
+            $discount = 0;
             $total = $subtotal - $discount;
 
             $order = Order::create([
@@ -67,8 +67,8 @@ class CheckoutController extends Controller
                     'price'                => $variation->price,
                 ]);
 
-                
-                
+
+
             }
 
             DB::commit();

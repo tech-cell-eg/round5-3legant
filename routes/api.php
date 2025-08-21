@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 
-use App\Http\Controllers\Api\HomeController;
-use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\API\HomeController;
+use App\Http\Controllers\API\CheckoutController;
 use App\Http\Controllers\API\EmailVerifyController;
 
 use App\Http\Controllers\API\CartController;
