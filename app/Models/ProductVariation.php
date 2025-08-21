@@ -18,6 +18,7 @@ class ProductVariation extends Model {
     public function checkTheStock($quantity) {
         return ($quantity <= $this->quantity);
     }
+
     public function orderItems() {
         return $this->hasMany(OrderItem::class);
     }

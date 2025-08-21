@@ -38,6 +38,7 @@ class ProductSeeder extends Seeder {
             'base_price'  => 30,
             'category_id' => 1
         ]);
+   
 
         Product::factory()
             ->count(15)

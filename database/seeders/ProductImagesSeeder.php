@@ -12,6 +12,7 @@ class ProductImagesSeeder extends Seeder
      */
     public function run(): void
     {
+
         $productImage = new ProductImage();
         $productImage->product_variation_id = 1;
         $productImage->image = "product_images/p1.jpg";

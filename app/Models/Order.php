@@ -10,14 +10,10 @@ class Order extends Model {
         'address', 'country', 'city', 'state', 'zip_code',
         'payment_method', 'subtotal', 'discount', 'total', 'status'];
 
-class Order extends Model
-{
-    protected $fillable = ['user_id','address_id','final_price','status'];
 
-    public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
+
+
+
 
 
     function address() {
@@ -30,11 +26,6 @@ class Order extends Model
         return $this->belongsTo(Coupon::class);
     }
 
-
-        public function items()
-    {
-        return $this->hasMany(OrderItem::class);
-    }
 
 
 }
