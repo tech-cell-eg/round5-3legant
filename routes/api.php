@@ -9,7 +9,7 @@ use App\Http\Controllers\ProductController;
 
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CheckoutController;
-use App\Http\Controllers\Api\EmailVerifyController;
+use App\Http\Controllers\API\EmailVerifyController;
 
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\UserController;
@@ -67,7 +67,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::put('update-cart-item/{cartItemId}', [CartController::class, 'updateItem']);
     Route::post('cart/apply-coupon', [CartController::class, 'applyCoupon']);
     Route::post('cart/apply-shipping', [CartController::class, 'applyShipping']);
-  
+
   // Products
     Route::get("/products", [ProductController::class, 'getProductsWithPagination']);
     Route::get("/sorted-products", [ProductController::class, 'sortedProducts']);
