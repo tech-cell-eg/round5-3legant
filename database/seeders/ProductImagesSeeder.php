@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\ProductImage;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductImagesSeeder extends Seeder
@@ -37,6 +36,5 @@ class ProductImagesSeeder extends Seeder
         $productImage->product_variation_id=5;
         $productImage->image="product_images/p5.jpg";
         $productImage->save();
-
     }
 }

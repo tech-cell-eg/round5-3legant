@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Http\Controllers\API\AddressesController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\Api\CheckoutController;
 use  Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\Auth\AuthController;
@@ -87,10 +88,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 //Home Page
-Route::get('/home/categories', [\App\Http\Controllers\Api\HomeController::class, 'categories']);
-Route::get('/home/new-arrivals', [\App\Http\Controllers\Api\HomeController::class, 'newArrivals']);
-Route::get('/home/more-products', [\App\Http\Controllers\Api\HomeController::class, 'moreProducts']);
-Route::get('/home/shop-collections', [\App\Http\Controllers\Api\HomeController::class, 'shopCollections']);
-Route::get('/home/best-sellers', [\App\Http\Controllers\Api\HomeController::class, 'bestSellers']);
-Route::get('/blog/list', [\App\Http\Controllers\Api\HomeController::class, 'blogList']);
-Route::get('/blog/{id}', [\App\Http\Controllers\Api\HomeController::class, 'blogDetails']);
+Route::get('/home/categories', [HomeController::class, 'categories']);
+Route::get('/home/new-arrivals', [HomeController::class, 'newArrivals']);
+Route::get('/home/more-products', [HomeController::class, 'moreProducts']);
+Route::get('/home/shop-collections', [HomeController::class, 'shopCollections']);
+Route::get('/home/best-sellers', [HomeController::class, 'bestSellers']);
+Route::get('/blog/list', [HomeController::class, 'blogList']);
+Route::get('/blog/{id}', [HomeController::class, 'blogDetails']);
+//Checkout
+Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
+
+
