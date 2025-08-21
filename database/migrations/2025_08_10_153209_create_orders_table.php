@@ -13,7 +13,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('address_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->decimal('final_price', 8, 2);
+            $table->decimal('sub_total', 8, 2)->default(0);
+            $table->decimal('final_price', 8, 2)->default(0);
             $table->enum('status', ['pending', 'shipped', 'delivered', 'cancelled']);
             $table->timestamps();
         });

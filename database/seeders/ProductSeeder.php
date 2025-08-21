@@ -45,9 +45,9 @@ class ProductSeeder extends Seeder {
             ]);
 
    
-        // Product::factory()
-        //     ->count(15)
-        //     ->has(ProductVariation::factory()->count(3), 'variations')
-        //     ->create();
+        Product::factory()
+            ->count(15)
+            ->has(ProductVariation::factory()->count(3), 'productVariations')
+            ->create();
     }
 }
