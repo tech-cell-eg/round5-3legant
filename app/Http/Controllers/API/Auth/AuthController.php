@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\PasswordOTP;
 use Illuminate\Http\Request;
 use App\Mail\PasswordOTPMail;
-use PhpParser\Node\Expr\Throw_;
 use App\Traits\APIResponseTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -15,9 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
 use App\Http\Requests\Auth\LoginRequest;
-use Illuminate\Support\Facades\Password;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Models\PasswordOtp as ModelsPasswordOtp;
 
 class AuthController extends Controller {
 
@@ -81,23 +78,38 @@ class AuthController extends Controller {
                 'expires_at' => now()->addMinutes(10),
             ]);
             Mail::to($email)->send(new PasswordOTPMail($otp));
-            return $this->successResponse([], 'OTP send to your email', 201);
+            return $this->successResponse(['email' => $email], 'OTP send to your email', 201);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
     }
 
+    public function verifyOtp(Request $request) {
+        try {
+            $request->validate([
+                'otp' => 'required|string|size:4',
+                'email'    => 'required|email|exists:users,email',
+            ]);
+            $OTP = PasswordOtp::where('email', $request->email)->where('otp', $request->otp)->where('expires_at', '>', now())->first();
+            if (!$OTP) {
+                return $this->errorResponse([], 'Invalid or expired OTP', 400);
+            }
+            return $this->successResponse(['otp' => $OTP, 'email' => $request->email], 'OTP verified successfully', 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 'Error', $e->getCode());
+        }
+    }
 
     public function resetPassword(Request $request) {
         try {
             $request->validate([
+                'otp' => 'required|string|size:4',
                 'email'    => 'required|email|exists:users,email',
-                'otp' => 'required|string',
                 'password' => 'required|confirmed|string|min:8'
             ]);
-            $OTP = ModelsPasswordOtp::where('email', $request->email)->where('otp', $request->otp)->where('expires_at', '>', now())->first();
+            $OTP = PasswordOtp::where('email', $request->email)->where('otp', $request->otp)->where('expires_at', '>', now())->first();
             if (!$OTP) {
-                return $this->errorResponse([], 'Invalid OTP', 400);
+                return $this->errorResponse([], 'Invalid or expired OTP', 400);
             }
             $user = User::where('email', $request->email)->first();
             if (!$user) {
@@ -106,12 +118,10 @@ class AuthController extends Controller {
             $user->update([
                 'password' => Hash::make($request->password),
             ]);
-            $OTP->update([
-                'is_used' => true
-            ]);
+            $OTP->update(['is_used' => true]);
             return $this->successResponse([], 'Password reset successfully');
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 'Error', 500);
+            return $this->errorResponse($e->getMessage(), 'Error while resetting password', 500);
         }
     }
 }
