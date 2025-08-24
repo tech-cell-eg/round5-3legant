@@ -23,7 +23,7 @@ class ProductVariationFactory extends Factory {
             'product_id' => Product::factory(),
             'size'       => $this->faker->randomElement($sizes),
             'color'      => $this->faker->randomElement($colors),
-            'quantity'   => $this->faker->numberBetween(1, 50),
+            'quantity'   => $this->faker->numberBetween(10, 50),
             'price'      => $this->faker->randomFloat(2, 10, 100),
         ];
     }

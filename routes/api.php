@@ -68,7 +68,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('cart/apply-coupon', [CartController::class, 'applyCoupon']);
     Route::post('cart/apply-shipping', [CartController::class, 'applyShipping']);
 
-  // Products
+    // Products
     Route::get("/products", [ProductController::class, 'getProductsWithPagination']);
     Route::get("/sorted-products", [ProductController::class, 'sortedProducts']);
     Route::get("/products-without-pagination", [ProductController::class, 'getProductsWithoutPagination']);
@@ -88,6 +88,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Checkout
     Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
 });
-
-
-

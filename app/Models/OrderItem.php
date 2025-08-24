@@ -4,29 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OrderItem extends Model
-{
-    protected $fillable = ['order_id','product_variation_id','quantity','price'];
+class OrderItem extends Model {
+    protected $fillable = ['order_id', 'product_variation_id', 'quantity', 'price'];
 
-    public function productVariation()
-    {
+    public function productVariation() {
         return $this->belongsTo(ProductVariation::class);
     }
 
-
-    function order(){
+    function order() {
         return $this->belongsTo(Order::class);
-
     }
 
-    public function variation()
-    {
-        return $this->belongsTo(ProductVariation::class, 'product_variation_id');
-    }
-
-    public function variation()
-    {
+    public function variation() {
         return $this->belongsTo(ProductVariation::class, 'product_variation_id');
     }
 }
-

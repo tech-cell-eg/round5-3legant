@@ -36,7 +36,7 @@ class AuthController extends Controller {
                 'token' => $token,
             ];
             event(new Registered($user));
-            return $this->successResponse($data, 'User Registerd Successfully please verify your email to continue', 200);
+            return $this->successResponse($data, 'User Registerd Successfully please verify your email to continue', 201);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
@@ -54,7 +54,7 @@ class AuthController extends Controller {
                 'user' => $user,
                 'token' => $token,
             ];
-            return $this->successResponse($data, "Login Successful", 201);
+            return $this->successResponse($data, "Login Successful", 200);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 'Error', 500);
         }
