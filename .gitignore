@@ -26,3 +26,4 @@ Thumbs.db
 !/lang/vendor/adminlte/en
 .htaccess
 error_log
+_ide_helper.php
