@@ -13,7 +13,8 @@ trait APIResponseTrait {
         }
         return response()->json($response, $code);
     }
-    public function errorResponse($errors = [], $message = 'Error', $code = 400) {
+    public function errorResponse($errors = [], $message = 'Error', $code = 500) {
+        $code = ($code < 100 || $code > 599) ? 500 : $code;
         $response = [
             'success' => false,
             'message' => $message,

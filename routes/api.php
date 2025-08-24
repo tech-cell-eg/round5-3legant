@@ -22,6 +22,7 @@ use App\Http\Controllers\WishlistController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('forget-password', [AuthController::class, 'sendPasswordResetOTP']);
+Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 Route::post('reset-password', [AuthController::class, 'resetPassword']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -68,7 +69,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('cart/apply-coupon', [CartController::class, 'applyCoupon']);
     Route::post('cart/apply-shipping', [CartController::class, 'applyShipping']);
 
-  // Products
+    // Products
     Route::get("/products", [ProductController::class, 'getProductsWithPagination']);
     Route::get("/sorted-products", [ProductController::class, 'sortedProducts']);
     Route::get("/products-without-pagination", [ProductController::class, 'getProductsWithoutPagination']);
@@ -88,6 +89,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
     // Checkout
     Route::post('/checkout', [CheckoutController::class, 'placeOrder']);
 });
-
-
-

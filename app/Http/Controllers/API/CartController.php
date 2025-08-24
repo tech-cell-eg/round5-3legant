@@ -58,8 +58,7 @@ class CartController extends Controller {
             return $this->successResponse([], 'Item added to cart', 201);
         } catch (\Exception $e) {
             Log::error('Error : ' . $e->getMessage());
-            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
-            return $this->errorResponse($e->getMessage(), 'Somting went wrong', $code);
+            return $this->errorResponse($e->getMessage(), 'Somting went wrong', $e->getCode());
         }
     }
     public function calculateCart(Cart $cart) {
@@ -111,8 +110,7 @@ class CartController extends Controller {
             $cart = $this->calculateCart($cart);
             return $this->successResponse([], 'Item Updated', 200);
         } catch (\Exception $e) {
-            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
-            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be updated', $code);
+            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be updated', $e->getCode());
         }
     }
     public function removeItem(Request $request, $cartItemId) {
@@ -126,8 +124,7 @@ class CartController extends Controller {
             $cart = $this->calculateCart($cart);
             return $this->successResponse([], 'Item removed from cart', 200);
         } catch (\Exception $e) {
-            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
-            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be removed', $code);
+            return $this->errorResponse($e->getMessage(), 'Cart item Can\'t be removed', $e->getCode());
         }
     }
     public function applyCoupon(Request $request) {
@@ -154,8 +151,7 @@ class CartController extends Controller {
             $cart = $this->calculateCart($cart);
             return $this->successResponse($cart, 'Coupon Applied successful', 200);
         } catch (\Exception $e) {
-            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
-            return $this->errorResponse($e->getMessage(), 'Can\'t apply coupon', $code);
+            return $this->errorResponse($e->getMessage(), 'Can\'t apply coupon', $e->getCode());
         }
     }
     public function applyShipping(Request $request) {
@@ -182,8 +178,7 @@ class CartController extends Controller {
             $cart = $this->calculateCart($cart);
             return $this->successResponse($cart, 'Shipping applied', 200);
         } catch (\Exception $e) {
-            $code = ($e->getCode() < 100 || $e->getCode() > 599) ? 500 : $e->getCode();
-            return $this->errorResponse($e->getMessage(), 'Can\'t apply ', $code);
+            return $this->errorResponse($e->getMessage(), 'Can\'t apply ', $e->getCode());
         }
     }
 }
